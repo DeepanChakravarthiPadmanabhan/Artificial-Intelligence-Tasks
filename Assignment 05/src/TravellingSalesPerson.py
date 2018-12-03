@@ -4,10 +4,6 @@ import random
 
 class TravellingSalePerson:
 
-    # def __init__(self):
-    #     self.listOfCities = []
-    #     self.CalculateHeuristic = True
-
     def __init__(self, listOfCities=[]):
         self.listOfCities = listOfCities
         self.CalculateHeuristic = True
