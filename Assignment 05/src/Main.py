@@ -2,11 +2,16 @@ import TravellingSalesPerson
 import City
 import SimpleHillClimbing
 import SteepestAscendHillClimbing
+import SimulatedAnnealing
+import Config
 
 import datetime
 
-filename = './Cities/49_cities.txt'
-Restart_Count = 5
+#filename = './Cities/49_cities.txt'
+filename = Config.filename
+Restart_Count = Config.Restart_Count
+Time_To_Execute_Min = Config.Time_To_Execute_Min
+Time_To_Execute_Sec = Time_To_Execute_Min * 60
 
 TSP = TravellingSalesPerson.TravellingSalePerson()
 
@@ -18,8 +23,12 @@ with open(filename) as file:
 
 start_time = datetime.datetime.now()
 
-# tsp = SimpleHillClimbing.SimpleHillClimbingWithRestart(TSP, Restart_Count)
-tsp = SteepestAscendHillClimbing.SteepestAscendHillClimbingWithRestart(TSP, Restart_Count)
+if(Config.Algorithm == Config.Algorithm_Options[0]):
+    tsp = SimpleHillClimbing.SimpleHillClimbingWithRestart(TSP, Restart_Count)
+elif (Config.Algorithm == Config.Algorithm_Options[1]):
+    tsp = SteepestAscendHillClimbing.SteepestAscendHillClimbingWithRestart(TSP, Restart_Count)
+elif (Config.Algorithm == Config.Algorithm_Options[2]):
+    tsp = SimulatedAnnealing.SimulatedAnnealing(TSP, Time_To_Execute_Sec)
 
 stop_time = datetime.datetime.now()
 
