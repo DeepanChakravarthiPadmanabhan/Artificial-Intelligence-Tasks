@@ -3,7 +3,7 @@ import numpy as np
 import Node
 
 CUTOFF_DEPTH = 3
-LOG_ALPHABETAPRUNE = True
+LOG_ALPHABETAPRUNE = False
 
 # self.rows=int(input("Enter the number of rows"))
 # self.columns=int(input("Enter the number of columns"))
@@ -246,7 +246,7 @@ class Connect4:
         if(node.SomeBodyHasWon == True or depth == CUTOFF_DEPTH):
             evaluation = node.Evaluate()
             message = 'Sombody has won : ' + str(node.SomeBodyHasWon) + ', Depth : ' + str(depth) + 'Evaluation : ' + str(evaluation)
-
+            self.Log_AlphaBeta(message)
             return  evaluation, -1
 
         children = node.GenerateChildren(user)
