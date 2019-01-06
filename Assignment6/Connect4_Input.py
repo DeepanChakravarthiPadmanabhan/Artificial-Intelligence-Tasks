@@ -5,7 +5,7 @@ import Node
 CUTOFF_DEPTH = 3
 LOG_ALPHABETAPRUNE = False
 
-# self.rows=int(input("Enter the number of rows"))
+# self.rows=int(input("Enter the number of rows\n"))
 # self.columns=int(input("Enter the number of columns"))
 # self.chartowin=int(input("Enter the threshold to win"))
 # self.user1=input("Enter the user 1 character between A-Z")
@@ -15,12 +15,12 @@ LOG_ALPHABETAPRUNE = False
 
 class Connect4:
     def __init__(self):
-        self.rows=4
-        self.columns=4
-        self.chartowin=4
+        self.rows=int(input("Enter the number of rows"))
+        self.columns=int(input("Enter the number of columns"))
+        self.chartowin=int(input("Enter the threshold to win"))
 
-        self.user1='X'
-        self.user2='Y'
+        self.user1=input("Enter the user 1 character between A-Z")
+        self.user2=input("Enter the user 2 character between A-Z")
         self.user1=self.user1.upper()
         self.user2=self.user2.upper()
         self.winflag=False
