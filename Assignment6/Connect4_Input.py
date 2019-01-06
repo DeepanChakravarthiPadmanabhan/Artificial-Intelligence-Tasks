@@ -1,5 +1,9 @@
 import sys
 import numpy as np
+import Node
+
+CUTOFF_DEPTH = 3
+LOG_ALPHABETAPRUNE = True
 
 # self.rows=int(input("Enter the number of rows"))
 # self.columns=int(input("Enter the number of columns"))
@@ -24,6 +28,10 @@ class Connect4:
         print(self.board)
         self.winner=None
 
+        # For Evaluation Purposes
+        self.NodeBoardEvaluator = Node.Node(np.copy(self.board), self.rows, self.columns, self.chartowin, self.user1, self.user2)
+        # self.user1 is the person playing the game while self.user2 is the computer playing
+
     def fill_board(self):
         self.winflag=False
         self.fillrow=self.rows-1
@@ -37,6 +45,8 @@ class Connect4:
                 self.inputuser1 = int(input('Enter the column of User1 insertion'))
                 self.validentry(self.inputuser1,1)
                 self.board=self.insert(1)
+                # For Evaluation Purposes
+                self.NodeBoardEvaluator.insertAt(self.inputuser1, self.user1)
                 print(self.board)
                 self.wincheck(1)
                 if self.winflag==True:
@@ -50,9 +60,14 @@ class Connect4:
             if self.occupancycheck():
                 break
             else:
-                self.inputuser2 = int(input('Enter the column of User2 insertion'))
-                self.validentry(self.inputuser2,2)
-                self.board=self.insert(2)
+                # self.inputuser2 = int(input('Enter the column of User2 insertion'))
+                # self.validentry(self.inputuser2,2)
+                # self.board=self.insert(2)
+                # For Evaluation Purposes
+                self.inputuser2 = self.EsitmateNextPosition(self.NodeBoardEvaluator, self.user2)
+                self.board = self.insert(2)
+                self.NodeBoardEvaluator.insertAt(self.inputuser2, self.user2)
+
                 print(self.board)
 
                 self.wincheck(2)
@@ -70,6 +85,7 @@ class Connect4:
         else:
             return True
 
+
     def wincheck(self,usernumber):
         print("Atwincheck")
         if usernumber==1:
@@ -79,8 +95,8 @@ class Connect4:
             flag4=self.leftdiagonal(self.user1)
             if (flag1 or flag2 or flag3 or flag4)==True:
                 print("Hey1")
-                self.winflag==True
-                self.winner==1
+                self.winflag=True
+                self.winner=1
                 return None
             else:
                 print("Hey1else")
@@ -93,8 +109,8 @@ class Connect4:
             flag4=self.leftdiagonal(self.user2)
             if (flag1 or flag2 or flag3 or flag4)==True:
                 print("Hey2")
-                self.winflag==True
-                self.winner==2
+                self.winflag=True
+                self.winner=2
             return None
         else:
             print("Hey2else")
@@ -215,6 +231,59 @@ class Connect4:
             return True
         else:
             return True
+
+    def EsitmateNextPosition(self, node, user):
+        depth = 0
+        alpha = np.NINF
+        beta = np.Inf
+
+        evaluation, index = self.AlphaBetaPrune(node, depth, alpha, beta, user)
+
+        return index + 1
+
+
+    def AlphaBetaPrune(self, node, depth, alpha, beta, user, isMax=True):
+        if(node.SomeBodyHasWon == True or depth == CUTOFF_DEPTH):
+            evaluation = node.Evaluate()
+            message = 'Sombody has won : ' + str(node.SomeBodyHasWon) + ', Depth : ' + str(depth) + 'Evaluation : ' + str(evaluation)
+
+            return  evaluation, -1
+
+        children = node.GenerateChildren(user)
+
+        eval, index = 0, 0
+
+        if (isMax):
+            v = np.NINF
+            for i, child in enumerate(children):
+                value, notUsedIndex = self.AlphaBetaPrune(child, depth+1, alpha, beta, user, not isMax)
+                v = min(v, value)
+                eval = v
+                index = i
+                if (v > beta):
+                    break
+                    # return v
+                alpha = max(v, alpha)
+        else:
+            v = np.Inf
+            for i, child in enumerate(children):
+                value, notUsedIndex = self.AlphaBetaPrune(child, depth+1, alpha, beta, user, not isMax)
+                v = max(v, value)
+                eval = v
+                index = i
+                if(v < alpha):
+                    break
+                    # return v
+                beta = min(v, beta)
+
+        return eval, index
+
+    def Log(self, message):
+        print(message)
+
+    def Log_AlphaBeta(self, message):
+        if LOG_ALPHABETAPRUNE:
+            self.Log(message)
 
 k=Connect4()
 k.fill_board()
