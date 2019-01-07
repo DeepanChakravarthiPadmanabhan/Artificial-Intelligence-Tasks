@@ -3,8 +3,8 @@ import numpy as np
 import Node
 import EvaluationLog
 
-CUTOFF_DEPTH = 5
-LOG_ALPHABETAPRUNE = False
+CUTOFF_DEPTH = 4
+LOG_ALPHABETAPRUNE = True
 
 # self.rows=int(input("Enter the number of rows"))
 # self.columns=int(input("Enter the number of columns"))
