@@ -1,11 +1,12 @@
 import sys
 import numpy as np
 import Node
+import EvaluationLog
 
-CUTOFF_DEPTH = 3
+CUTOFF_DEPTH = 5
 LOG_ALPHABETAPRUNE = False
 
-# self.rows=int(input("Enter the number of rows\n"))
+# self.rows=int(input("Enter the number of rows"))
 # self.columns=int(input("Enter the number of columns"))
 # self.chartowin=int(input("Enter the threshold to win"))
 # self.user1=input("Enter the user 1 character between A-Z")
@@ -19,8 +20,8 @@ class Connect4:
         self.columns=int(input("Enter the number of columns"))
         self.chartowin=int(input("Enter the threshold to win"))
 
-        self.user1=input("Enter the user 1 character between A-Z")
-        self.user2=input("Enter the user 2 character between A-Z")
+        self.user1=input("Enter the user 1 character between A-Z, 0-9")
+        self.user2=input("Enter the user 2 character between A-Z, 0-9")
         self.user1=self.user1.upper()
         self.user2=self.user2.upper()
         self.winflag=False
@@ -50,7 +51,7 @@ class Connect4:
                 print(self.board)
                 self.wincheck(1)
                 if self.winflag==True:
-                    print("Flagloop")
+                    # print("Flagloop")
                     if self.winner == 1:
                         print("User1 is the winner")
                     else:
@@ -65,6 +66,7 @@ class Connect4:
                 # self.board=self.insert(2)
                 # For Evaluation Purposes
                 self.inputuser2 = self.EsitmateNextPosition(self.NodeBoardEvaluator, self.user2)
+                print(self.inputuser2)
                 self.board = self.insert(2)
                 self.NodeBoardEvaluator.insertAt(self.inputuser2, self.user2)
 
@@ -87,19 +89,19 @@ class Connect4:
 
 
     def wincheck(self,usernumber):
-        print("Atwincheck")
+
         if usernumber==1:
             flag1=self.checkhorizontal(self.user1)
             flag2=self.checkvertical(self.user1)
             flag3=self.rightdiagonal(self.user1)
             flag4=self.leftdiagonal(self.user1)
             if (flag1 or flag2 or flag3 or flag4)==True:
-                print("Hey1")
+
                 self.winflag=True
                 self.winner=1
                 return None
             else:
-                print("Hey1else")
+
                 return None
 
         elif usernumber==2:
@@ -108,47 +110,68 @@ class Connect4:
             flag3=self.rightdiagonal(self.user2)
             flag4=self.leftdiagonal(self.user2)
             if (flag1 or flag2 or flag3 or flag4)==True:
-                print("Hey2")
+
                 self.winflag=True
                 self.winner=2
             return None
         else:
-            print("Hey2else")
+
             return None
 
     def checkhorizontal(self, user):
         end = self.board.shape[1] - self.chartowin + 1
-
+        flag = True
         for n, i in enumerate(self.board):
             # print("n=", n)
+
             for m, j in enumerate(i):
                 if m < end:
                     # print("m=", m)
-                    if self.board[n, m] == self.board[n, m + 1] == self.board[n, m + 2] == self.board[n, m + 3]==user:
-                        flag = True
+                    # if self.board[n, m] == self.board[n, m + 1] == self.board[n, m + 2] == self.board[n, m + 3]==user:
+                    #     flag = True
+                    #     return flag
+                    # else:
+                    #     flag = False
+                    flag=True
+                    for counter in range(self.chartowin):
+                        if(self.board[n, m+counter]) != user:
+                            flag = False
+                            break
+                    if(flag):
                         return flag
-                    else:
-                        flag = False
+
+
+
         return flag
 
     def checkvertical(self, user):
         end = self.board.shape[0] - self.chartowin + 1
+        flag = True
 
         for n, i in enumerate(self.board):
             # print("n=", n)
             for m, j in enumerate(i):
                 if n < end:
                     # print("m=", m)
-                    if self.board[n, m] == self.board[n + 1, m] == self.board[n + 2, m] == self.board[n + 3, m]==user:
-                        flag = True
+                    # if self.board[n, m] == self.board[n + 1, m] == self.board[n + 2, m] == self.board[n + 3, m]==user:
+                    #     flag = True
+                    #     return flag
+                    # else:
+                    #     flag = False
+                    flag = True
+                    for counter in range(self.chartowin):
+                        if(self.board[n+counter, m]) != user:
+                            flag = False
+                            break
+
+                    if (flag):
                         return flag
-                    else:
-                        flag = False
         return flag
 
     def leftdiagonal(self, user):
         endrow = self.board.shape[0] - self.chartowin + 1
         endcol = self.board.shape[1] - self.chartowin + 1
+        flag = True
 
         for n, i in enumerate(self.board):
             # print("n=", n)
@@ -156,27 +179,44 @@ class Connect4:
                 for m, j in enumerate(i):
                     if m < endcol:
                         # print("m=", m)
-                        if self.board[n, m] == self.board[n + 1, m + 1] == self.board[n + 2, m + 2] == self.board[n + 3, m + 3]==user:
-                            flag = True
+                        # if self.board[n, m] == self.board[n + 1, m + 1] == self.board[n + 2, m + 2] == self.board[n + 3, m + 3]==user:
+                        #     flag = True
+                        #     return flag
+                        # else:
+                        #     flag = False
+                        flag = True
+                        for counter in range(self.chartowin):
+                            if (self.board[n + counter, m + counter]) != user:
+                                flag = False
+                                break
+
+                        if (flag):
                             return flag
-                        else:
-                            flag = False
         return flag
 
     def rightdiagonal(self, user):
         endrow = self.board.shape[0] - self.chartowin + 1
         endcol = self.board.shape[1] - self.chartowin + 1
+        flag = True
         for n, i in enumerate(self.board):
             # print("n=", n)
             if n < endrow:
                 for m, j in enumerate(i[::-1]):
                     if m >= endcol:
                         # print("m=", m)
-                        if self.board[n, m] == self.board[n + 1, m - 1] == self.board[n + 2, m - 2] == self.board[n + 3, m - 3]==user:
-                            flag = True
+                        # if self.board[n, m] == self.board[n + 1, m - 1] == self.board[n + 2, m - 2] == self.board[n + 3, m - 3]==user:
+                        #     flag = True
+                        #     return flag
+                        # else:
+                        #     flag = False
+                        flag = True
+                        for counter in range(self.chartowin):
+                            if (self.board[n + counter, m - counter]) != user:
+                                flag = False
+                                break
+
+                        if (flag):
                             return flag
-                        else:
-                            flag = False
         return flag
 
     def insert(self,user):
@@ -236,30 +276,48 @@ class Connect4:
         depth = 0
         alpha = np.NINF
         beta = np.Inf
+        rootEvaluationLog = EvaluationLog.EvaluationLog()
+        evaluation, index = self.AlphaBetaPrune(node, depth, alpha, beta, user, rootEvaluationLog)
 
-        evaluation, index = self.AlphaBetaPrune(node, depth, alpha, beta, user)
+        if LOG_ALPHABETAPRUNE:
+            rootEvaluationLog.printLog()
+
+        self.Log_AlphaBeta('The final evaluation is : ' + str(evaluation) + ' having index number : ' + str(index))
 
         return index + 1
 
 
-    def AlphaBetaPrune(self, node, depth, alpha, beta, user, isMax=True):
-        if(node.SomeBodyHasWon == True or depth == CUTOFF_DEPTH):
-            evaluation = node.Evaluate()
-            message = 'Sombody has won : ' + str(node.SomeBodyHasWon) + ', Depth : ' + str(depth) + 'Evaluation : ' + str(evaluation)
-            self.Log_AlphaBeta(message)
+    def AlphaBetaPrune(self, node, depth, alpha, beta, user, evaluationLoggerNode, isMax=True):
+        evaluation = node.Evaluate()
+        evaluationLoggerNode.SetOrignalEvaluation(evaluation)
+        evaluationLoggerNode.SetBoard(node.board)
+
+        if(node.SomeBodyHasWon() == True or depth == CUTOFF_DEPTH):
+            evaluationLoggerNode.SetSomebodyHasWon(node.SomeBodyHasWon())
+            evaluationLoggerNode.SetEvaluation(evaluation)
             return  evaluation, -1
 
-        children = node.GenerateChildren(user)
+        nextUser = None
+        if(user == self.user1):
+            nextUser = self.user2
+        else:
+            nextUser = self.user1
 
-        eval, index = 0, 0
+        children, columns = node.GenerateChildren(user)
+
+        evaluationResult, index = 0, 0
 
         if (isMax):
             v = np.NINF
             for i, child in enumerate(children):
-                value, notUsedIndex = self.AlphaBetaPrune(child, depth+1, alpha, beta, user, not isMax)
-                v = min(v, value)
-                eval = v
-                index = i
+                childEvaluationLog = EvaluationLog.EvaluationLog(evaluationLoggerNode, depth + 1, not isMax)
+                evaluationLoggerNode.AddChild(childEvaluationLog)
+                value, notUsedIndex = self.AlphaBetaPrune(child, depth + 1, alpha, beta, nextUser, childEvaluationLog,
+                                                          not isMax)
+                if(value > v):
+                    v = value
+                    index = columns[i]
+                evaluationResult = v
                 if (v > beta):
                     break
                     # return v
@@ -267,16 +325,23 @@ class Connect4:
         else:
             v = np.Inf
             for i, child in enumerate(children):
-                value, notUsedIndex = self.AlphaBetaPrune(child, depth+1, alpha, beta, user, not isMax)
-                v = max(v, value)
-                eval = v
-                index = i
+                childEvaluationLog = EvaluationLog.EvaluationLog(evaluationLoggerNode, depth + 1, not isMax)
+                evaluationLoggerNode.AddChild(childEvaluationLog)
+                value, notUsedIndex = self.AlphaBetaPrune(child, depth + 1, alpha, beta, nextUser, childEvaluationLog,
+                                                          not isMax)
+
+                if (value < v):
+                    v = value
+                    index = columns[i]
+                evaluationResult = v
                 if(v < alpha):
                     break
                     # return v
                 beta = min(v, beta)
 
-        return eval, index
+        evaluationLoggerNode.SetEvaluation(evaluationResult)
+        evaluationLoggerNode.SetIndex(index)
+        return evaluationResult, index
 
     def Log(self, message):
         print(message)
