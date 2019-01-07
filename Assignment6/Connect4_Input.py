@@ -4,7 +4,8 @@ import Node
 import EvaluationLog
 
 CUTOFF_DEPTH = 4
-LOG_ALPHABETAPRUNE = True
+ALPHABETAPRUNE = True
+LOG_EVALUATIONTREE = True
 
 # self.rows=int(input("Enter the number of rows"))
 # self.columns=int(input("Enter the number of columns"))
@@ -277,9 +278,12 @@ class Connect4:
         alpha = np.NINF
         beta = np.Inf
         rootEvaluationLog = EvaluationLog.EvaluationLog()
-        evaluation, index = self.AlphaBetaPrune(node, depth, alpha, beta, user, rootEvaluationLog)
+        if ALPHABETAPRUNE:
+            evaluation, index = self.AlphaBetaPrune(node, depth, alpha, beta, user, rootEvaluationLog)
+        else:
+            evaluation, index = self.MiniMax(node, depth, user, rootEvaluationLog)
 
-        if LOG_ALPHABETAPRUNE:
+        if LOG_EVALUATIONTREE:
             rootEvaluationLog.printLog()
 
         self.Log_AlphaBeta('The final evaluation is : ' + str(evaluation) + ' having index number : ' + str(index))
@@ -347,8 +351,48 @@ class Connect4:
         print(message)
 
     def Log_AlphaBeta(self, message):
-        if LOG_ALPHABETAPRUNE:
+        if LOG_EVALUATIONTREE:
             self.Log(message)
+
+    def MiniMax(self, node, depth, user, evaluationLoggerNode, isMax=True):
+        evaluation = node.Evaluate()
+        evaluationLoggerNode.SetOrignalEvaluation(evaluation)
+        evaluationLoggerNode.SetBoard(node.board)
+
+        if (node.SomeBodyHasWon() == True or depth == CUTOFF_DEPTH):
+            evaluationLoggerNode.SetSomebodyHasWon(node.SomeBodyHasWon())
+            evaluationLoggerNode.SetEvaluation(evaluation)
+            return evaluation, -1
+
+        nextUser = None
+        if (user == self.user1):
+            nextUser = self.user2
+        else:
+            nextUser = self.user1
+
+        children, columns = node.GenerateChildren(user)
+
+        if len(children) == 0:
+            return evaluation, -1
+
+        evaluationResults = []
+
+        for child in children:
+            childEvaluationLog = EvaluationLog.EvaluationLog(evaluationLoggerNode, depth + 1, not isMax)
+            evaluationLoggerNode.AddChild(childEvaluationLog)
+            value, notUsedIndex = self.MiniMax(child, depth+1, nextUser, childEvaluationLog, not isMax)
+            evaluationResults.append(value)
+
+        if(isMax):
+            evaluation = max(evaluationResults)
+        else:
+            evaluation = min(evaluationResults)
+
+        index = columns[evaluationResults.index(evaluation)]
+
+        return evaluation, index
+
+
 
 k=Connect4()
 k.fill_board()
