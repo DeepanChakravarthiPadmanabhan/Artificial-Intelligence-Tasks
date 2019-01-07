@@ -228,8 +228,6 @@ class Node:
                 winnable+=1
 
         return  winnable
-<<<<<<< HEAD
-=======
 
     def GetValidNeighboursList(self, key,list):
         listofPositions = self.GetNeighboursList(key, list)
@@ -258,9 +256,6 @@ class Node:
 
         return listofPositions
 
-
-
->>>>>>> e2925ff3abe694537ddd63a1ffd776a11b09b1f9
 
     def GetValidNeighboursList(self, key,list):
         listofPositions = self.GetNeighboursList(key, list)
