@@ -352,4 +352,3 @@ class Connect4:
 
 k=Connect4()
 k.fill_board()
-
