@@ -16,12 +16,12 @@ LOG_ALPHABETAPRUNE = True
 
 class Connect4:
     def __init__(self):
-        self.rows=7
-        self.columns=7
-        self.chartowin=4
+        self.rows=int(input("Enter the number of rows"))
+        self.columns=int(input("Enter the number of columns"))
+        self.chartowin=int(input("Enter the threshold to win"))
 
-        self.user1='X'
-        self.user2='Y'
+        self.user1=input("Enter the user 1 character between A-Z, 0-9")
+        self.user2=input("Enter the user 2 character between A-Z, 0-9")
         self.user1=self.user1.upper()
         self.user2=self.user2.upper()
         self.winflag=False
@@ -51,7 +51,7 @@ class Connect4:
                 print(self.board)
                 self.wincheck(1)
                 if self.winflag==True:
-                    print("Flagloop")
+                    # print("Flagloop")
                     if self.winner == 1:
                         print("User1 is the winner")
                     else:
@@ -89,19 +89,19 @@ class Connect4:
 
 
     def wincheck(self,usernumber):
-        print("Atwincheck")
+
         if usernumber==1:
             flag1=self.checkhorizontal(self.user1)
             flag2=self.checkvertical(self.user1)
             flag3=self.rightdiagonal(self.user1)
             flag4=self.leftdiagonal(self.user1)
             if (flag1 or flag2 or flag3 or flag4)==True:
-                print("Hey1")
+
                 self.winflag=True
                 self.winner=1
                 return None
             else:
-                print("Hey1else")
+
                 return None
 
         elif usernumber==2:
@@ -110,12 +110,12 @@ class Connect4:
             flag3=self.rightdiagonal(self.user2)
             flag4=self.leftdiagonal(self.user2)
             if (flag1 or flag2 or flag3 or flag4)==True:
-                print("Hey2")
+
                 self.winflag=True
                 self.winner=2
             return None
         else:
-            print("Hey2else")
+
             return None
 
     def checkhorizontal(self, user):
@@ -352,4 +352,3 @@ class Connect4:
 
 k=Connect4()
 k.fill_board()
-

@@ -257,9 +257,29 @@ class Node:
         return listofPositions
 
 
+    def GetValidNeighboursList(self, key,list):
+        listofPositions = self.GetNeighboursList(key, list)
+        positions = []
 
+        for position in listofPositions:
+            if self.isValidPosition(position):
+                positions.append(position)
 
+        return  positions
 
+    def GetNeighboursList(self, key, list):
+        listofPositions = []
+        if(key == 'horizontal'):
+            listofPositions.append(Position(list[0].row, list[0].column - 1))
+            listofPositions.append(Position(list[-1].row, list[-1].column + 1))
+        elif key == 'vertical':
+            listofPositions.append(Position(list[0].row - 1, list[0].column))
+            listofPositions.append(Position(list[-1].row + 1, list[-1].column))
+        elif key == 'leftDiagonal':
+            listofPositions.append(Position(list[0].row - 1, list[0].column - 1))
+            listofPositions.append(Position(list[-1].row + 1, list[-1].column + 1))
+        elif key == 'rightDiagonal':
+            listofPositions.append(Position(list[0].row + 1, list[0].column - 1))
+            listofPositions.append(Position(list[-1].row - 1, list[-1].column + 1))
 
-
-
+        return listofPositions
