@@ -5,7 +5,7 @@ import EvaluationLog
 
 CUTOFF_DEPTH = 4
 ALPHABETAPRUNE = True
-LOG_EVALUATIONTREE = True
+LOG_EVALUATIONTREE = False
 
 # self.rows=int(input("Enter the number of rows"))
 # self.columns=int(input("Enter the number of columns"))
