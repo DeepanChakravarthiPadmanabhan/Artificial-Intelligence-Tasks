@@ -282,7 +282,7 @@ class Connect4:
         if LOG_ALPHABETAPRUNE:
             rootEvaluationLog.printLog()
 
-        print('The final evaluation is : ' + str(evaluation) + ' having index number : ' + str(index))
+        self.Log_AlphaBeta('The final evaluation is : ' + str(evaluation) + ' having index number : ' + str(index))
 
         return index + 1
 
